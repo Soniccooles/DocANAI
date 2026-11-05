@@ -1,9 +1,8 @@
-﻿using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Abstractions;
+﻿using DocANAI.Persistence.Abstractions;
 using DocANAI.Persistence.Attributes;
 using DocANAI.Persistence.Context;
-using DocANAI.Persistence.Entities.ProcessingTask;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.ProcessingTasks;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 

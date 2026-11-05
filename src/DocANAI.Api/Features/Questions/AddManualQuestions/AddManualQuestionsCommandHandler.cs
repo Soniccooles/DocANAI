@@ -53,6 +53,6 @@ internal sealed class AddManualQuestionsCommandHandler(
         await questionsRepository.AddRangeAsync(questions, ct);
 
         return Result.Success<AddManualQuestionsResponse, string>(
-            new AddManualQuestionsResponse((Guid)command.TaskId, questions.Length));
+            new AddManualQuestionsResponse(command.TaskId, questions.Length));
     }
 }

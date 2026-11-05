@@ -1,11 +1,11 @@
-﻿using DocANAI.Persistence.Entities.ProcessingTask;
+﻿using DocANAI.Persistence.Entities.ProcessingTasks;
 using DocANAI.Persistence.Repositories.ProcessingTasks;
 using DocANAI.Persistence.ValueObjects;
 using DocANAI.Worker.Features.BuildReport;
 using DocANAI.Worker.Features.ParseDocuments;
 using DocANAI.Worker.Features.RunAnalysis;
 using MediatR;
-using TaskStatusEnum = DocANAI.Persistence.Entities.ProcessingTask.TaskStatus;
+using TaskStatusEnum = DocANAI.Persistence.Entities.ProcessingTasks.TaskStatus;
 
 
 namespace DocANAI.Worker.Features.ProcessTask;

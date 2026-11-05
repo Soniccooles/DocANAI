@@ -1,4 +1,4 @@
-﻿using DocANAI.Persistence.Entities.Priority;
+﻿using DocANAI.Persistence.Entities.Priorities;
 using DocANAI.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

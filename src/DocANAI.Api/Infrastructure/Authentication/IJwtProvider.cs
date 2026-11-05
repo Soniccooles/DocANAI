@@ -1,4 +1,4 @@
-﻿using DocANAI.Persistence.Entities.User;
+﻿using DocANAI.Persistence.Entities.Users;
 
 namespace DocANAI.Api.Infrastructure.Authentication;
 

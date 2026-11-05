@@ -2,7 +2,7 @@
 using DocANAI.Persistence.Abstractions;
 using DocANAI.Persistence.Attributes;
 using DocANAI.Persistence.Context;
-using DocANAI.Persistence.Entities.Priority;
+using DocANAI.Persistence.Entities.Priorities;
 using DocANAI.Persistence.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 

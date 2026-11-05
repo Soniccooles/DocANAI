@@ -43,6 +43,6 @@ public sealed class DeleteFileEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess 
             ? Ok(result.Value) 
-            : StatusCode(StatusCodes.Status500InternalServerError, new { Error = result.Error });
+            : StatusCode(StatusCodes.Status500InternalServerError, new { result.Error });
     }
 }

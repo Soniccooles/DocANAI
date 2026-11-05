@@ -1,4 +1,5 @@
 ﻿using DocANAI.Persistence.Abstractions;
+using DocANAI.Persistence.Entities.ProcessingTasks;
 using DocANAI.Persistence.ValueObjects;
 using JetBrains.Annotations;
 
@@ -6,14 +7,14 @@ namespace DocANAI.Persistence.Entities;
 
 public sealed class Report : AuditableEntity<IdOf<Report>>
 {
-    public IdOf<ProcessingTask.ProcessingTask> TaskId { get; private set; }
+    public IdOf<ProcessingTask> TaskId { get; private set; }
     public string Extension { get; private set; }
     public string FilePath { get; private set; }
     public DateTime? DeletionDate { get; private set; }
 
     private Report(
         IdOf<Report> id,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
+        IdOf<ProcessingTask> taskId,
         string extension,
         string filePath,
         DateTime? deletionDate)
@@ -27,7 +28,7 @@ public sealed class Report : AuditableEntity<IdOf<Report>>
 
     public static Report Create(
         IdOf<Report> id,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
+        IdOf<ProcessingTask> taskId,
         string extension,
         string filePath,
         DateTime? deletionDate = null)

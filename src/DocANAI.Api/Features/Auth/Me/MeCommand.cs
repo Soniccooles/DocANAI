@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 using DocANAI.Contracts.DTOs.Auth;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.ValueObjects;
 using MediatR;
 

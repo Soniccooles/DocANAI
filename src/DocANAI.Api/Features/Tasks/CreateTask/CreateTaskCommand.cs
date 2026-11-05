@@ -1,5 +1,5 @@
 using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.ValueObjects;
 using MediatR;
 

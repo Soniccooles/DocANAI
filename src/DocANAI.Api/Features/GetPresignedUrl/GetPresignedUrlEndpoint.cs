@@ -53,6 +53,6 @@ public sealed class GetPresignedUrlEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess 
             ? Ok(result.Value) 
-            : NotFound(new { Error = result.Error });
+            : NotFound(new { result.Error });
     }
 }

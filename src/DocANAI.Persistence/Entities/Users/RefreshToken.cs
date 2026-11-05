@@ -1,7 +1,7 @@
 using DocANAI.Persistence.Abstractions;
 using DocANAI.Persistence.ValueObjects;
 
-namespace DocANAI.Persistence.Entities.User;
+namespace DocANAI.Persistence.Entities.Users;
 
 public sealed class RefreshToken : AuditableEntity<IdOf<RefreshToken>>
 {

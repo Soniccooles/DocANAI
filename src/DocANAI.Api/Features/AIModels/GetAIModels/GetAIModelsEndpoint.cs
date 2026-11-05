@@ -19,6 +19,7 @@ public sealed class GetAIModelsEndpoint(IMediator mediator) : ControllerBase
     /// Lists AI models that can be selected when creating a processing task.
     /// </summary>
     /// <param name="includeUnavailable">Include models marked as unavailable in the database.</param>
+    /// <param name="ct"></param>
     [HttpGet]
     [ProducesResponseType(typeof(List<AIModelDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
@@ -30,6 +31,6 @@ public sealed class GetAIModelsEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess
             ? Ok(result.Value)
-            : BadRequest(new { Error = result.Error });
+            : BadRequest(new { result.Error });
     }
 }

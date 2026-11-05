@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.Users;
 
 namespace DocANAI.Persistence.Repositories.RefreshTokens;
 

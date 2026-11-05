@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using JetBrains.Annotations;
 
-namespace DocANAI.Persistence.Entities.Priority;
+namespace DocANAI.Persistence.Entities.Priorities;
 
 public sealed class PriorityLevel : Entity<string>
 {

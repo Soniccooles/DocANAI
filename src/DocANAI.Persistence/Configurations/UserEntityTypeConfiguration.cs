@@ -1,4 +1,4 @@
-﻿using DocANAI.Persistence.Entities.User;
+﻿using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

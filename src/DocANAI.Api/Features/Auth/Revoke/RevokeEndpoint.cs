@@ -37,7 +37,7 @@ public sealed class RevokeEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess 
             ? NoContent() 
-            : BadRequest(new { Error = result.Error });
+            : BadRequest(new { result.Error });
     }
 
     private string GetIpAddress() =>

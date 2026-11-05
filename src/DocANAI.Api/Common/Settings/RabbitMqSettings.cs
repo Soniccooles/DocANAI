@@ -1,4 +1,4 @@
-namespace DocANAI.Api.Settings;
+namespace DocANAI.Api.Common.Settings;
 
 public class RabbitMqSettings
 {

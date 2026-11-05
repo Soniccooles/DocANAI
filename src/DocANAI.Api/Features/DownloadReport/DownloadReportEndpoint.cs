@@ -43,7 +43,7 @@ public sealed class DownloadReportEndpoint(IMediator mediator) : ControllerBase
 
         if (result.IsFailure)
         {
-            return NotFound(new { Error = result.Error });
+            return NotFound(new { result.Error });
         }
 
         var fileName = Path.GetFileName(objectName);

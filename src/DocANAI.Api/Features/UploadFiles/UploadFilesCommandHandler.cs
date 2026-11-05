@@ -19,7 +19,7 @@ internal sealed class UploadFilesCommandHandler(
     {
         try
         {
-            var objectName = await minioService.UploadFileAsync(command.File, null);
+            var objectName = await minioService.UploadFileAsync(command.File);
 
             var extension = Path.GetExtension(command.File.FileName).ToLowerInvariant();
             

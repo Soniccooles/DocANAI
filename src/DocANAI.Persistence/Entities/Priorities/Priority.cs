@@ -2,7 +2,7 @@
 using DocANAI.Persistence.ValueObjects;
 using JetBrains.Annotations;
 
-namespace DocANAI.Persistence.Entities.Priority;
+namespace DocANAI.Persistence.Entities.Priorities;
 
 public sealed class Priority : Entity<IdOf<Priority>> 
 {

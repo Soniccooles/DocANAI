@@ -1,4 +1,6 @@
 ﻿using DocANAI.Persistence.Abstractions;
+using DocANAI.Persistence.Entities.ProcessingTasks;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.ValueObjects;
 using JetBrains.Annotations;
 
@@ -6,8 +8,8 @@ namespace DocANAI.Persistence.Entities;
 
 public sealed class SourceDocument : AuditableEntity<IdOf<SourceDocument>>
 {
-    public IdOf<User.User> UserId { get; private set; }
-    public IdOf<ProcessingTask.ProcessingTask> TaskId { get; private set; }
+    public IdOf<User> UserId { get; private set; }
+    public IdOf<ProcessingTask> TaskId { get; private set; }
     public string Extension { get; private set; }
     public string Filename { get; private set; }
     public string FilePath { get; private set; }
@@ -15,8 +17,8 @@ public sealed class SourceDocument : AuditableEntity<IdOf<SourceDocument>>
 
     private SourceDocument(
         IdOf<SourceDocument> id,
-        IdOf<User.User> userId,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
+        IdOf<User> userId,
+        IdOf<ProcessingTask> taskId,
         string extension,
         string filename,
         string filePath,
@@ -33,8 +35,8 @@ public sealed class SourceDocument : AuditableEntity<IdOf<SourceDocument>>
 
     public static SourceDocument Create(
         IdOf<SourceDocument> id,
-        IdOf<User.User> userId,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
+        IdOf<User> userId,
+        IdOf<ProcessingTask> taskId,
         string extension,
         string filename,
         string filePath,

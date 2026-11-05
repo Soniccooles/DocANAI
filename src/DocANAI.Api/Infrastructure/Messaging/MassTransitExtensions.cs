@@ -1,4 +1,4 @@
-using DocANAI.Api.Settings;
+using DocANAI.Api.Common.Settings;
 using MassTransit;
 
 namespace DocANAI.Api.Infrastructure.Messaging;

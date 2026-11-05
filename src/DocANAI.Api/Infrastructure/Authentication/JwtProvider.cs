@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using DocANAI.Api.Settings;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Api.Common.Settings;
+using DocANAI.Persistence.Entities.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

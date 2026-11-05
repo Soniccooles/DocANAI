@@ -1,4 +1,4 @@
-﻿namespace DocANAI.Persistence.Entities.ProcessingTask;
+﻿namespace DocANAI.Persistence.Entities.ProcessingTasks;
 
 public enum TaskStatus
 {

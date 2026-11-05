@@ -1,7 +1,6 @@
 using CSharpFunctionalExtensions;
 using DocANAI.Contracts.DTOs.Auth;
 using DocANAI.Persistence.Repositories.Users;
-using DocANAI.Persistence.ValueObjects;
 using MediatR;
 
 namespace DocANAI.Api.Features.Auth.Me;

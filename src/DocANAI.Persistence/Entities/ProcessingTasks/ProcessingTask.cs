@@ -2,22 +2,22 @@
 using DocANAI.Persistence.ValueObjects;
 using JetBrains.Annotations;
 
-namespace DocANAI.Persistence.Entities.ProcessingTask;
+namespace DocANAI.Persistence.Entities.ProcessingTasks;
 
 public sealed class ProcessingTask : AuditableEntity<IdOf<ProcessingTask>>
 {
-    public IdOf<User.User> UserId { get; private set; }
-    public IdOf<AIModel.AIModel> ModelId { get; private set; }
-    public IdOf<Priority.Priority> PriorityId { get; private set; }
+    public IdOf<Users.User> UserId { get; private set; }
+    public IdOf<AIModel> ModelId { get; private set; }
+    public IdOf<Priorities.Priority> PriorityId { get; private set; }
     public TaskStatus Status { get; private set; }
     public DateTime? StartTime { get; private set; }
     public DateTime? EndTime { get; private set; }
 
     private ProcessingTask(
         IdOf<ProcessingTask> id,
-        IdOf<User.User> userId,
-        IdOf<AIModel.AIModel> modelId,
-        IdOf<Priority.Priority> priorityId)
+        IdOf<Users.User> userId,
+        IdOf<AIModel> modelId,
+        IdOf<Priorities.Priority> priorityId)
     {
         Id = id;
         UserId = userId;
@@ -28,9 +28,9 @@ public sealed class ProcessingTask : AuditableEntity<IdOf<ProcessingTask>>
 
     public static ProcessingTask Create(
         IdOf<ProcessingTask> id,
-        IdOf<User.User> userId,
-        IdOf<AIModel.AIModel> modelId,
-        IdOf<Priority.Priority> priorityId)
+        IdOf<Users.User> userId,
+        IdOf<AIModel> modelId,
+        IdOf<Priorities.Priority> priorityId)
         => new(id, userId, modelId, priorityId);
 
     public void Start()

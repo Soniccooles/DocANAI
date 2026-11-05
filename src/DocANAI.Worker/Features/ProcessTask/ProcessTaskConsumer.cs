@@ -1,5 +1,5 @@
 using DocANAI.Contracts.Messages;
-using DocANAI.Persistence.Entities.ProcessingTask;
+using DocANAI.Persistence.Entities.ProcessingTasks;
 using DocANAI.Persistence.ValueObjects;
 using MassTransit;
 using MediatR;

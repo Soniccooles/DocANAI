@@ -51,7 +51,7 @@ public class RunAnalysisCommandHandler(
         await answersRepository.AddRangeAsync(answers, ct);
     }
 
-    private static string ResolveOllamaModelName(DocANAI.Persistence.Entities.AIModel.AIModel model) =>
+    private static string ResolveOllamaModelName(AIModel model) =>
         string.IsNullOrWhiteSpace(model.Version) || model.Version.Equals("latest", StringComparison.OrdinalIgnoreCase)
             ? model.Name
             : $"{model.Name}:{model.Version}";

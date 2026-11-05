@@ -1,4 +1,4 @@
-﻿namespace DocANAI.Persistence.Entities.User;
+﻿namespace DocANAI.Persistence.Entities.Users;
 
 public enum UserType
 {

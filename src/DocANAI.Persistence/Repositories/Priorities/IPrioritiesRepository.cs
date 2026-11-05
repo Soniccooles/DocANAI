@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Entities.Priority;
+using DocANAI.Persistence.Entities.Priorities;
 
 namespace DocANAI.Persistence.Repositories.Priorities;
 

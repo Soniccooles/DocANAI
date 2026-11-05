@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 
-namespace DocANAI.Worker.Infrastructure.Ollama;
+namespace DocANAI.Worker.Infrastructure.Llm.Ollama;
 
 public sealed class OllamaClient(
     HttpClient httpClient,

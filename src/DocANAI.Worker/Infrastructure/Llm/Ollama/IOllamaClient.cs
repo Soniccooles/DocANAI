@@ -1,4 +1,4 @@
-namespace DocANAI.Worker.Infrastructure.Ollama;
+namespace DocANAI.Worker.Infrastructure.Llm.Ollama;
 
 public interface IOllamaClient
 {

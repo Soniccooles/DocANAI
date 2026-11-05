@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Entities.AIModel;
+using DocANAI.Persistence.Entities;
 using DocANAI.Persistence.ValueObjects;
 
 namespace DocANAI.Persistence.Repositories.AIModels;

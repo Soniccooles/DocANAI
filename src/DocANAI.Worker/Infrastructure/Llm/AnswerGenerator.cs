@@ -1,6 +1,6 @@
 using System.Text;
 using DocANAI.Persistence.Entities;
-using DocANAI.Worker.Infrastructure.Ollama;
+using DocANAI.Worker.Infrastructure.Llm.Ollama;
 using Microsoft.Extensions.Options;
 
 namespace DocANAI.Worker.Infrastructure.Llm;

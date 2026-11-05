@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
-using DocANAI.Persistence.Entities.AIModel;
-using DocANAI.Persistence.Entities.ProcessingTask;
+using DocANAI.Persistence.Entities;
+using DocANAI.Persistence.Entities.ProcessingTasks;
 using DocANAI.Persistence.Repositories.AIModels;
 using DocANAI.Persistence.Repositories.Priorities;
 using DocANAI.Persistence.Repositories.ProcessingTasks;
@@ -41,7 +41,7 @@ internal sealed class CreateTaskCommandHandler(
         await processingTasksRepository.AddAsync(task, ct);
 
         return Result.Success<CreateTaskResponse, string>(new CreateTaskResponse(
-            (Guid)taskId,
+            taskId,
             command.ModelId,
             task.Status.ToString(),
             ResolveOllamaModelName(model)));

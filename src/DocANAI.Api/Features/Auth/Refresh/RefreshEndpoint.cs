@@ -34,7 +34,7 @@ public sealed class RefreshEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess 
             ? Ok(result.Value) 
-            : Unauthorized(new { Error = result.Error });
+            : Unauthorized(new { result.Error });
     }
 
     private string GetIpAddress() =>

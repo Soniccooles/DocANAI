@@ -1,10 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DocANAI.Persistence;
-using DocANAI.Worker.Features.ProcessTask;
 using DocANAI.Worker.Infrastructure.Llm;
+using DocANAI.Worker.Infrastructure.Llm.Ollama;
 using DocANAI.Worker.Infrastructure.Messaging;
-using DocANAI.Worker.Infrastructure.Ollama;
 using DocANAI.Worker.Infrastructure.Parsing;
 using DocANAI.Worker.Infrastructure.Reports;
 using DocANAI.Worker.Infrastructure.Storage;

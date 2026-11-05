@@ -1,13 +1,12 @@
 using CSharpFunctionalExtensions;
 using DocANAI.Contracts.Messages;
-using DocANAI.Persistence.Entities.ProcessingTask;
 using DocANAI.Persistence.Repositories.ProcessingTasks;
 using DocANAI.Persistence.Repositories.Questions;
 using DocANAI.Persistence.Repositories.SourceDocuments;
 using MassTransit;
 using MediatR;
 
-using TaskStatusEnum = DocANAI.Persistence.Entities.ProcessingTask.TaskStatus;
+using TaskStatusEnum = DocANAI.Persistence.Entities.ProcessingTasks.TaskStatus;
 
 namespace DocANAI.Api.Features.Tasks.StartTask;
 
@@ -43,9 +42,9 @@ internal sealed class StartTaskCommandHandler(
         task.Start();
         await processingTasksRepository.UpdateAsync(task, ct);
 
-        await publishEndpoint.Publish(new ProcessTaskMessage((Guid)command.TaskId), ct);
+        await publishEndpoint.Publish(new ProcessTaskMessage(command.TaskId), ct);
 
         return Result.Success<StartTaskResponse, string>(
-            new StartTaskResponse((Guid)command.TaskId, task.Status.ToString()));
+            new StartTaskResponse(command.TaskId, task.Status.ToString()));
     }
 }

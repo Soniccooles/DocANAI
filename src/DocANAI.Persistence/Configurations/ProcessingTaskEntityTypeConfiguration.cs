@@ -1,7 +1,7 @@
-﻿using DocANAI.Persistence.Entities.AIModel;
-using DocANAI.Persistence.Entities.Priority;
-using DocANAI.Persistence.Entities.ProcessingTask;
-using DocANAI.Persistence.Entities.User;
+﻿using DocANAI.Persistence.Entities;
+using DocANAI.Persistence.Entities.Priorities;
+using DocANAI.Persistence.Entities.ProcessingTasks;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

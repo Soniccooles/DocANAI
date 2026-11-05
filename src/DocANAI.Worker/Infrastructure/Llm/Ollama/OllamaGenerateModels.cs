@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DocANAI.Worker.Infrastructure.Ollama;
+namespace DocANAI.Worker.Infrastructure.Llm.Ollama;
 
 internal sealed class OllamaGenerateRequest
 {

@@ -25,7 +25,7 @@ internal sealed class GetTaskStatusCommandHandler(
         if (maybeReport.HasNoValue)
         {
             return new GetTaskStatusResponse(
-                (Guid)command.TaskId,
+                command.TaskId,
                 string.Empty,
                 false,
                 task.Status.ToString()
@@ -34,7 +34,7 @@ internal sealed class GetTaskStatusCommandHandler(
 
         var report = maybeReport.Value;
         return new GetTaskStatusResponse(
-            (Guid)command.TaskId,
+            command.TaskId,
             report.FilePath,
             true,
             task.Status.ToString()

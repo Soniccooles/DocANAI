@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using DocANAI.Api.Common.Settings;
 using DocANAI.Api.Infrastructure.Authentication;
-using DocANAI.Api.Settings;
 using DocANAI.Contracts.DTOs.Auth;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.Repositories.RefreshTokens;
 using MediatR;
 using Microsoft.Extensions.Options;

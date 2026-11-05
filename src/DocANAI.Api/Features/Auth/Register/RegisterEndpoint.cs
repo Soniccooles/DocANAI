@@ -33,7 +33,7 @@ public sealed class RegisterEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess 
             ? Ok(result.Value) 
-            : BadRequest(new { Error = result.Error });
+            : BadRequest(new { result.Error });
     }
     
     private string GetIpAddress() => HttpContext.Connection.RemoteIpAddress?.ToString() ??  "Unknown";

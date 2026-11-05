@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using DocANAI.Contracts.DTOs;
-using DocANAI.Persistence.Entities.User;
+using DocANAI.Persistence.Entities.Users;
 using DocANAI.Persistence.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +46,6 @@ public sealed class CreateTaskEndpoint(IMediator mediator) : ControllerBase
 
         return result.IsSuccess
             ? Ok(result.Value)
-            : BadRequest(new { Error = result.Error });
+            : BadRequest(new { result.Error });
     }
 }

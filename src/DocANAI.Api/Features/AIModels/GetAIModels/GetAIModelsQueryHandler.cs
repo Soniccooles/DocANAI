@@ -1,6 +1,6 @@
 using CSharpFunctionalExtensions;
 using DocANAI.Contracts.DTOs.AIModels;
-using DocANAI.Persistence.Entities.AIModel;
+using DocANAI.Persistence.Entities;
 using DocANAI.Persistence.Repositories.AIModels;
 using MediatR;
 
@@ -26,7 +26,7 @@ internal sealed class GetAIModelsQueryHandler(IAIModelsRepository aiModelsReposi
 
     private static AIModelDto MapToDto(AIModel model) =>
         new(
-            (Guid)model.Id,
+            model.Id,
             model.Name,
             model.Version,
             ResolveOllamaModelName(model),

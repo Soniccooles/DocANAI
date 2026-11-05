@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace DocANAI.Api.Filters;
+namespace DocANAI.Api.Common.Middleware.Filters;
 
 public class AuthorizeOperationFilter : IOperationFilter
 {

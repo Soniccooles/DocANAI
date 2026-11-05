@@ -2,7 +2,7 @@
 using DocANAI.Persistence.ValueObjects;
 using JetBrains.Annotations;
 
-namespace DocANAI.Persistence.Entities.AIModel;
+namespace DocANAI.Persistence.Entities;
 
 public sealed class AIModel : Entity<IdOf<AIModel>>
 {
@@ -20,8 +20,8 @@ public sealed class AIModel : Entity<IdOf<AIModel>>
 
     public static AIModel Create(IdOf<AIModel> id, string name, string version)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
-        ArgumentException.ThrowIfNullOrWhiteSpace(version, nameof(version));
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(version);
 
         return new AIModel(id, name, version, true);
     }

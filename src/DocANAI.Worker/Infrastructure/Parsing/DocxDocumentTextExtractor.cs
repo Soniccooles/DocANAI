@@ -9,7 +9,7 @@ internal static class DocxDocumentTextExtractor
         ct.ThrowIfCancellationRequested();
 
         using var document = WordprocessingDocument.Open(content, false);
-        var body = document.MainDocumentPart?.Document?.Body;
+        var body = document.MainDocumentPart?.Document.Body;
         var text = body?.InnerText ?? string.Empty;
 
         return Task.FromResult(text.Trim());
