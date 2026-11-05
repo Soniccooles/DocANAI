@@ -128,10 +128,6 @@ namespace DocANAI.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("source_document_id");
 
-                    b.Property<Guid>("TaskId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("task_id");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -144,8 +140,6 @@ namespace DocANAI.Persistence.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "hnsw");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
-
-                    b.HasIndex("TaskId");
 
                     b.HasIndex("SourceDocumentId", "ChunkIndex")
                         .IsUnique();
@@ -551,12 +545,6 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.SourceDocument", null)
                         .WithMany()
                         .HasForeignKey("SourceDocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
-                        .WithMany()
-                        .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

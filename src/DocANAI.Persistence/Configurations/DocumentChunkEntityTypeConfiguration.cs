@@ -1,6 +1,4 @@
 using DocANAI.Persistence.Entities;
-using DocANAI.Persistence.Entities.AIModel;
-using DocANAI.Persistence.Entities.ProcessingTask;
 using DocANAI.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,10 +14,6 @@ public sealed class DocumentChunkEntityTypeConfiguration : IEntityTypeConfigurat
         builder.HasId();
         builder.HasAudits();
         builder.HasIndex(x => new { x.SourceDocumentId, x.ChunkIndex }).IsUnique();
-        
-        builder.Property(x => x.TaskId)
-            .IsRequired()
-            .HasColumnName(nameof(DocumentChunk.TaskId).ToSnakeCase());
         
         builder.Property(x => x.SourceDocumentId)
             .IsRequired()
@@ -48,13 +42,6 @@ public sealed class DocumentChunkEntityTypeConfiguration : IEntityTypeConfigurat
             .HasOperators("vector_cosine_ops")
             .HasStorageParameter("m", 16)
             .HasStorageParameter("ef_construction", 64);
-
-        builder.HasIndex(x => x.TaskId);
-        
-        builder.HasOne<ProcessingTask>()
-            .WithMany()
-            .HasForeignKey(x => x.TaskId)
-            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne<SourceDocument>()
             .WithMany()

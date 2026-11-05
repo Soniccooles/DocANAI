@@ -7,7 +7,6 @@ namespace DocANAI.Persistence.Entities;
 
 public sealed class DocumentChunk : AuditableEntity<IdOf<DocumentChunk>>
 {
-    public IdOf<ProcessingTask.ProcessingTask> TaskId { get; set; }
     public IdOf<SourceDocument> SourceDocumentId { get; set; }
     public int ChunkIndex { get; set; }
     public string Content { get; set; } = null!;
@@ -16,7 +15,6 @@ public sealed class DocumentChunk : AuditableEntity<IdOf<DocumentChunk>>
     
     private DocumentChunk(
         IdOf<DocumentChunk> id,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
         IdOf<SourceDocument> sourceDocumentId,
         int chunkIndex,
         string content,
@@ -24,7 +22,6 @@ public sealed class DocumentChunk : AuditableEntity<IdOf<DocumentChunk>>
         Vector? embedding)
     {
         Id = id; 
-        TaskId = taskId;
         SourceDocumentId = sourceDocumentId;
         ChunkIndex = chunkIndex;
         Content = content;
@@ -34,13 +31,12 @@ public sealed class DocumentChunk : AuditableEntity<IdOf<DocumentChunk>>
 
     public static DocumentChunk Create(
         IdOf<DocumentChunk> id,
-        IdOf<ProcessingTask.ProcessingTask> taskId,
         IdOf<SourceDocument> sourceDocumentId,
         int chunkIndex,
         string content,
         int? pageNumber,
         Vector? embedding)
-        => new(id, taskId, sourceDocumentId, chunkIndex, content, pageNumber, embedding);
+        => new(id, sourceDocumentId, chunkIndex, content, pageNumber, embedding);
 
     [UsedImplicitly]
 #pragma warning disable CS8618

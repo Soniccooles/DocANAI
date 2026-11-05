@@ -20,7 +20,6 @@ namespace DocANAI.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    task_id = table.Column<Guid>(type: "uuid", nullable: false),
                     source_document_id = table.Column<Guid>(type: "uuid", nullable: false),
                     chunk_index = table.Column<int>(type: "integer", nullable: false),
                     content = table.Column<string>(type: "text", nullable: false),
@@ -32,12 +31,6 @@ namespace DocANAI.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_document_chunk", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_document_chunk_processing_task_task_id",
-                        column: x => x.task_id,
-                        principalTable: "processing_task",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_document_chunk_source_document_source_document_id",
                         column: x => x.source_document_id,
@@ -60,11 +53,6 @@ namespace DocANAI.Persistence.Migrations
                 table: "document_chunk",
                 columns: new[] { "source_document_id", "chunk_index" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_document_chunk_task_id",
-                table: "document_chunk",
-                column: "task_id");
         }
 
         /// <inheritdoc />
