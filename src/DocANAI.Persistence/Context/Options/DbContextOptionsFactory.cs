@@ -9,7 +9,7 @@ public static class DbContextOptionsFactory
     public static DbContextOptions<TDbContext> CreateOptions<TDbContext>(string? connectionString)
         where TDbContext : DbContext
         => new DbContextOptionsBuilder<TDbContext>()
-            .UseNpgsql(connectionString)
+            .UseNpgsql(connectionString, o => o.UseVector())
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             .AddInterceptors(new UpdateAuditsSaveChangesInterceptor())
             .UseLoggerFactory(LoggerFactory.Create(x => x.AddConsole()))

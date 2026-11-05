@@ -2,7 +2,7 @@
   
   # PostgreSQL Database 17
   db:
-    image: postgres:17
+    image: pgvector/pgvector:pg17
     environment:
 
       POSTGRES_USER: ${POSTGRES_USER}
@@ -10,6 +10,8 @@
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5444:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 5s
@@ -170,5 +172,6 @@
       - docanai.api
 
 volumes:
+  pg_data:
   minio_data:
   ollama_data:

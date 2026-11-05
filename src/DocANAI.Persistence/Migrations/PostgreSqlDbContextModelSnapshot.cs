@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
 
@@ -20,6 +21,7 @@ namespace DocANAI.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("DocANAI.Persistence.Entities.AIModel.AIModel", b =>
@@ -93,6 +95,56 @@ namespace DocANAI.Persistence.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("answer", (string)null);
+                });
+
+            modelBuilder.Entity("DocANAI.Persistence.Entities.DocumentChunk", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("chunk_index");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Vector>("Embedding")
+                        .HasColumnType("vector(768)")
+                        .HasColumnName("embedding");
+
+                    b.Property<int?>("PageNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("page_number");
+
+                    b.Property<Guid>("SourceDocumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_document_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Embedding")
+                        .HasAnnotation("Npgsql:StorageParameter:ef_construction", 64)
+                        .HasAnnotation("Npgsql:StorageParameter:m", 16);
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "hnsw");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
+
+                    b.HasIndex("SourceDocumentId", "ChunkIndex")
+                        .IsUnique();
+
+                    b.ToTable("document_chunk", (string)null);
                 });
 
             modelBuilder.Entity("DocANAI.Persistence.Entities.Format", b =>
@@ -484,6 +536,15 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DocANAI.Persistence.Entities.DocumentChunk", b =>
+                {
+                    b.HasOne("DocANAI.Persistence.Entities.SourceDocument", null)
+                        .WithMany()
+                        .HasForeignKey("SourceDocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

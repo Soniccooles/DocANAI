@@ -22,10 +22,10 @@ public sealed class PostgreSqlDbContext(DbContextOptions<PostgreSqlDbContext> op
     public DbSet<Question> Questions => Set<Question>();
     public DbSet<Answer> Answers => Set<Answer>();
     public DbSet<Report> Reports => Set<Report>();
-
+    public DbSet<DocumentChunk> DocumentChunks => Set<DocumentChunk>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly).HasPostgresExtension("vector");
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -40,5 +40,6 @@ public sealed class PostgreSqlDbContext(DbContextOptions<PostgreSqlDbContext> op
         configurationBuilder.Properties<IdOf<Question>>().HaveConversion<IdOfValueConverter<Question>>();
         configurationBuilder.Properties<IdOf<Answer>>().HaveConversion<IdOfValueConverter<Answer>>();
         configurationBuilder.Properties<IdOf<Report>>().HaveConversion<IdOfValueConverter<Report>>();
+        configurationBuilder.Properties<IdOf<DocumentChunk>>().HaveConversion<IdOfValueConverter<DocumentChunk>>();
     }
 }
