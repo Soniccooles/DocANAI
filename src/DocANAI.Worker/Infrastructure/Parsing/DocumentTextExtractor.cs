@@ -10,7 +10,9 @@ public sealed class DocumentTextExtractor : IDocumentTextExtractor
         {
             "pdf" => PdfDocumentTextExtractor.ExtractAsync(content, ct),
             "docx" => DocxDocumentTextExtractor.ExtractAsync(content, ct),
-            _ => throw new NotSupportedException($"Document format '{extension}' is not supported. Supported: .pdf, .docx")
+            "txt" => TxtDocumentTextExtractor.ExtractAsync(content, ct),
+            "md" => MdDocumentTextExtractor.ExtractAsync(content, ct),
+            _ => throw new NotSupportedException($"Document format '{extension}' is not supported. Supported: .pdf, .docx, .txt, .md")
         };
     }
 
