@@ -1,7 +1,8 @@
 export const VALID_FILE_TYPES = {
   TXT: 'txt',
   DOCX: 'docx',
-  PDF: 'pdf'
+  PDF: 'pdf',
+  MD: 'md',
 }
 
 export const getFileType = (file: File): string => 
@@ -12,5 +13,6 @@ export const isFileValid = (file: File): boolean => {
 
   return fileType === VALID_FILE_TYPES.TXT ||
          fileType === VALID_FILE_TYPES.DOCX ||
-         fileType === VALID_FILE_TYPES.PDF         
+         fileType === VALID_FILE_TYPES.PDF || 
+         fileType === VALID_FILE_TYPES.MD
 }
