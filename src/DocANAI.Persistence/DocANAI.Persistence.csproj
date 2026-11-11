@@ -20,12 +20,4 @@
       <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Entities\Priority\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Entities\Priority\PriorityLevel.cs" />
-    </ItemGroup>
-
 </Project>

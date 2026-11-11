@@ -1,16 +1,22 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Pgvector;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace DocANAI.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
+
             migrationBuilder.CreateTable(
                 name: "a_i_model",
                 columns: table => new
@@ -18,7 +24,7 @@ namespace DocANAI.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     version = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    is_available = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +37,7 @@ namespace DocANAI.Persistence.Migrations
                 {
                     extension = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     max_size = table.Column<int>(type: "integer", nullable: false),
-                    mime_type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    mime_type = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,6 +91,32 @@ namespace DocANAI.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "refresh_token",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Token = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    CreatedByIp = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: true),
+                    RevokedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    RevokedByIp = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_refresh_token", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_refresh_token_user_UserId",
+                        column: x => x.UserId,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "processing_task",
                 columns: table => new
                 {
@@ -93,7 +125,7 @@ namespace DocANAI.Persistence.Migrations
                     model_id = table.Column<Guid>(type: "uuid", nullable: false),
                     priority_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     end_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -130,6 +162,7 @@ namespace DocANAI.Persistence.Migrations
                     task_id = table.Column<Guid>(type: "uuid", nullable: false),
                     extension = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     filename = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    file_path = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -163,6 +196,7 @@ namespace DocANAI.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     task_id = table.Column<Guid>(type: "uuid", nullable: false),
                     extension = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    file_path = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
                     deletion_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -193,6 +227,7 @@ namespace DocANAI.Persistence.Migrations
                     task_id = table.Column<Guid>(type: "uuid", nullable: false),
                     extension = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     filename = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    file_path = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: false),
                     size = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -225,7 +260,8 @@ namespace DocANAI.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    question_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    task_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    question_file_id = table.Column<Guid>(type: "uuid", nullable: true),
                     question_number = table.Column<int>(type: "integer", nullable: false),
                     text = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -235,9 +271,39 @@ namespace DocANAI.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_question", x => x.id);
                     table.ForeignKey(
+                        name: "FK_question_processing_task_task_id",
+                        column: x => x.task_id,
+                        principalTable: "processing_task",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_question_question_file_question_file_id",
                         column: x => x.question_file_id,
                         principalTable: "question_file",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "document_chunk",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    source_document_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    chunk_index = table.Column<int>(type: "integer", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    page_number = table.Column<int>(type: "integer", nullable: true),
+                    embedding = table.Column<Vector>(type: "vector(768)", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_document_chunk", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_document_chunk_source_document_source_document_id",
+                        column: x => x.source_document_id,
+                        principalTable: "source_document",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -271,6 +337,22 @@ namespace DocANAI.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "format",
+                columns: new[] { "extension", "max_size", "mime_type" },
+                values: new object[,]
+                {
+                    { ".docx", 104857600, "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+                    { ".pdf", 104857600, "application/pdf" },
+                    { ".xlsx", 104857600, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_a_i_model_name_version",
+                table: "a_i_model",
+                columns: new[] { "name", "version" },
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_answer_question_id",
                 table: "answer",
@@ -280,6 +362,21 @@ namespace DocANAI.Persistence.Migrations
                 name: "IX_answer_task_id",
                 table: "answer",
                 column: "task_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_document_chunk_embedding",
+                table: "document_chunk",
+                column: "embedding")
+                .Annotation("Npgsql:IndexMethod", "hnsw")
+                .Annotation("Npgsql:IndexOperators", new[] { "vector_cosine_ops" })
+                .Annotation("Npgsql:StorageParameter:ef_construction", 64)
+                .Annotation("Npgsql:StorageParameter:m", 16);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_document_chunk_source_document_id_chunk_index",
+                table: "document_chunk",
+                columns: new[] { "source_document_id", "chunk_index" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_priority_priority_level",
@@ -307,6 +404,11 @@ namespace DocANAI.Persistence.Migrations
                 column: "question_file_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_question_task_id",
+                table: "question",
+                column: "task_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_question_file_extension",
                 table: "question_file",
                 column: "extension");
@@ -320,6 +422,17 @@ namespace DocANAI.Persistence.Migrations
                 name: "IX_question_file_user_id",
                 table: "question_file",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_token_Token",
+                table: "refresh_token",
+                column: "Token",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_refresh_token_UserId",
+                table: "refresh_token",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_report_extension",
@@ -354,13 +467,19 @@ namespace DocANAI.Persistence.Migrations
                 name: "answer");
 
             migrationBuilder.DropTable(
+                name: "document_chunk");
+
+            migrationBuilder.DropTable(
+                name: "refresh_token");
+
+            migrationBuilder.DropTable(
                 name: "report");
 
             migrationBuilder.DropTable(
-                name: "source_document");
+                name: "question");
 
             migrationBuilder.DropTable(
-                name: "question");
+                name: "source_document");
 
             migrationBuilder.DropTable(
                 name: "question_file");

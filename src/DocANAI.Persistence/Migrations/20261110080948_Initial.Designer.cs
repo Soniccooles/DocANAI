@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
 
 namespace DocANAI.Persistence.Migrations
 {
     [DbContext(typeof(PostgreSqlDbContext))]
-    [Migration("20260605130113_SeedDataAndIncreaseMimeTypeLength")]
-    partial class SeedDataAndIncreaseMimeTypeLength
+    [Migration("20261110080948_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,9 +24,10 @@ namespace DocANAI.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.AIModel.AIModel", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.AIModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -98,6 +100,56 @@ namespace DocANAI.Persistence.Migrations
                     b.ToTable("answer", (string)null);
                 });
 
+            modelBuilder.Entity("DocANAI.Persistence.Entities.DocumentChunk", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ChunkIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("chunk_index");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Vector>("Embedding")
+                        .HasColumnType("vector(768)")
+                        .HasColumnName("embedding");
+
+                    b.Property<int?>("PageNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("page_number");
+
+                    b.Property<Guid>("SourceDocumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_document_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Embedding")
+                        .HasAnnotation("Npgsql:StorageParameter:ef_construction", 64)
+                        .HasAnnotation("Npgsql:StorageParameter:m", 16);
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "hnsw");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_cosine_ops" });
+
+                    b.HasIndex("SourceDocumentId", "ChunkIndex")
+                        .IsUnique();
+
+                    b.ToTable("document_chunk", (string)null);
+                });
+
             modelBuilder.Entity("DocANAI.Persistence.Entities.Format", b =>
                 {
                     b.Property<string>("Id")
@@ -118,9 +170,29 @@ namespace DocANAI.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("format", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = ".pdf",
+                            MaxSize = 104857600,
+                            MimeType = "application/pdf"
+                        },
+                        new
+                        {
+                            Id = ".docx",
+                            MaxSize = 104857600,
+                            MimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        },
+                        new
+                        {
+                            Id = ".xlsx",
+                            MaxSize = 104857600,
+                            MimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        });
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.Priority.Priority", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Priorities.Priority", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -136,7 +208,7 @@ namespace DocANAI.Persistence.Migrations
                     b.ToTable("priority", (string)null);
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.Priority.PriorityLevel", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Priorities.PriorityLevel", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -152,7 +224,7 @@ namespace DocANAI.Persistence.Migrations
                     b.ToTable("priority_level", (string)null);
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -392,7 +464,7 @@ namespace DocANAI.Persistence.Migrations
                     b.ToTable("source_document", (string)null);
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.User.RefreshToken", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Users.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -439,7 +511,7 @@ namespace DocANAI.Persistence.Migrations
                     b.ToTable("refresh_token", (string)null);
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.User.User", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -484,16 +556,25 @@ namespace DocANAI.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
+                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.Priority.Priority", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.DocumentChunk", b =>
                 {
-                    b.HasOne("DocANAI.Persistence.Entities.Priority.PriorityLevel", "PriorityLevel")
+                    b.HasOne("DocANAI.Persistence.Entities.SourceDocument", null)
+                        .WithMany()
+                        .HasForeignKey("SourceDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Priorities.Priority", b =>
+                {
+                    b.HasOne("DocANAI.Persistence.Entities.Priorities.PriorityLevel", "PriorityLevel")
                         .WithMany()
                         .HasForeignKey("priority_level")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -501,23 +582,23 @@ namespace DocANAI.Persistence.Migrations
                     b.Navigation("PriorityLevel");
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", b =>
                 {
-                    b.HasOne("DocANAI.Persistence.Entities.AIModel.AIModel", null)
+                    b.HasOne("DocANAI.Persistence.Entities.AIModel", null)
                         .WithMany()
                         .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tasks_model");
 
-                    b.HasOne("DocANAI.Persistence.Entities.Priority.Priority", null)
+                    b.HasOne("DocANAI.Persistence.Entities.Priorities.Priority", null)
                         .WithMany()
                         .HasForeignKey("PriorityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tasks_priority");
 
-                    b.HasOne("DocANAI.Persistence.Entities.User.User", null)
+                    b.HasOne("DocANAI.Persistence.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -532,7 +613,7 @@ namespace DocANAI.Persistence.Migrations
                         .HasForeignKey("QuestionFileId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
+                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -547,13 +628,13 @@ namespace DocANAI.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
+                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.User.User", null)
+                    b.HasOne("DocANAI.Persistence.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -568,7 +649,7 @@ namespace DocANAI.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
+                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -583,22 +664,22 @@ namespace DocANAI.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTask.ProcessingTask", null)
+                    b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
                         .WithMany()
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DocANAI.Persistence.Entities.User.User", null)
+                    b.HasOne("DocANAI.Persistence.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DocANAI.Persistence.Entities.User.RefreshToken", b =>
+            modelBuilder.Entity("DocANAI.Persistence.Entities.Users.RefreshToken", b =>
                 {
-                    b.HasOne("DocANAI.Persistence.Entities.User.User", "User")
+                    b.HasOne("DocANAI.Persistence.Entities.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

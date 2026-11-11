@@ -7,6 +7,8 @@ namespace DocANAI.Persistence.Configurations;
 
 public class FormatEntityTypeConfiguration : IEntityTypeConfiguration<Format>
 {
+    private const int MaxFileSize = 100 * 1024 * 1024;
+    
     public void Configure(EntityTypeBuilder<Format> builder)
     {
         builder.ToTable(nameof(Format).ToSnakeCase());
@@ -25,5 +27,9 @@ public class FormatEntityTypeConfiguration : IEntityTypeConfiguration<Format>
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnName(nameof(Format.MimeType).ToSnakeCase());
+        
+        builder.HasData(Format.Create(".pdf", MaxFileSize, "application/pdf"),
+            Format.Create(".docx", MaxFileSize, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+            Format.Create(".xlsx", MaxFileSize, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
     }
 }

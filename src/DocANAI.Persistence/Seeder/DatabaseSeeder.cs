@@ -23,14 +23,13 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
     {
         _logger.LogInformation("Starting database seeding for environment: {Environment}", environment);
         
-        bool formatsChanged = await SeedFormatsAsync(ct);
         bool prioritiesChanged = await SeedPrioritiesAsync(ct);
         bool modelsChanged = await SeedAIModelsAsync(ct);
         bool usersChanged = await SeedUsersAsync(ct);
         
         bool devDataChanged = false;
         
-        bool hasChanges = formatsChanged || prioritiesChanged || modelsChanged || usersChanged || devDataChanged;
+        bool hasChanges = prioritiesChanged || modelsChanged || usersChanged || devDataChanged;
 
         if (hasChanges)
         {
@@ -41,22 +40,6 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
         {
             _logger.LogInformation("No changes detected. Seeding skipped.");
         }
-    }
-
-    private async Task<bool> SeedFormatsAsync(CancellationToken ct)
-    {
-        if (await _dbContext.Formats.AnyAsync(ct)) return false;
-        
-        var formats = new[]
-        {
-            Format.Create(".pdf", 104857600, "application/pdf"),
-            Format.Create(".docx", 104857600, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-            Format.Create(".xlsx", 104857600, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        };
-
-        await _dbContext.Formats.AddRangeAsync(formats, ct);
-        _logger.LogInformation("Formats seeded successfully.");
-        return true;
     }
 
     private async Task<bool> SeedPrioritiesAsync(CancellationToken ct)
