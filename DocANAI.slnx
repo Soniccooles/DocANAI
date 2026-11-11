@@ -7,4 +7,5 @@
   <Project Path="src/DocANAI.Migrator/DocANAI.Migrator.csproj" />
   <Project Path="src/DocANAI.Persistence/DocANAI.Persistence.csproj" />
   <Project Path="src/DocANAI.Worker/DocANAI.Worker.csproj" />
+  <Project Path="tests/DocANAI.Worker.Tests/DocANAI.Worker.Tests.csproj" />
 </Solution>
