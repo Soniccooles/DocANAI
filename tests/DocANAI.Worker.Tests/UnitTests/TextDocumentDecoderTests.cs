@@ -2,8 +2,7 @@ using System.Text;
 using DocANAI.Worker.Infrastructure.Parsing;
  
 namespace DocANAI.Worker.Tests.UnitTests;
- 
-[TestFixture]
+
 public class TextDocumentDecoderTests
 {
     [TestCase(new byte[] { 0xFF, 0xFE, 0x41, 0x00 }, "utf-16", 2)] // UTF-16 LE с BOM
