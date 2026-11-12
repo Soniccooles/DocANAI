@@ -31,5 +31,7 @@ export interface GetTaskStatusResponse {
   taskId: string
   objectName: string
   isReady: boolean
-  status: string
+  status: TaskStatus
 }
+
+export type TaskStatus = 'InQueue' | 'Processing' | 'Done' | 'Failed'
