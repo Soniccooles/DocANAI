@@ -30,6 +30,8 @@ public class FormatEntityTypeConfiguration : IEntityTypeConfiguration<Format>
         
         builder.HasData(Format.Create(".pdf", MaxFileSize, "application/pdf"),
             Format.Create(".docx", MaxFileSize, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-            Format.Create(".xlsx", MaxFileSize, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            Format.Create(".xlsx", MaxFileSize, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            Format.Create(".txt", MaxFileSize, "text/plain"),
+            Format.Create(".md", MaxFileSize, "text/markdown"));
     }
 }

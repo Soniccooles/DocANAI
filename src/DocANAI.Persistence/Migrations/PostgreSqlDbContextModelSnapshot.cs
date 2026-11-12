@@ -186,6 +186,18 @@ namespace DocANAI.Persistence.Migrations
                             Id = ".xlsx",
                             MaxSize = 104857600,
                             MimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        },
+                        new
+                        {
+                            Id = ".txt",
+                            MaxSize = 104857600,
+                            MimeType = "text/plain"
+                        },
+                        new
+                        {
+                            Id = ".md",
+                            MaxSize = 104857600,
+                            MimeType = "text/markdown"
                         });
                 });
 
