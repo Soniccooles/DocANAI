@@ -8,8 +8,24 @@ internal static class TextDocumentDecoder
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     }
+    
+    /// <summary>
+    /// Метод возвращает весь буфер независимо от Position
+    /// </summary>
+    internal static async Task<byte[]> ReadAllBytesAsync(Stream content, CancellationToken ct)
+    {
+        if (content is MemoryStream ms)
+        {
+            ct.ThrowIfCancellationRequested();
+            return ms.ToArray();
+        }
 
-    public static (Encoding encoding, int bomLength) DefineEncoding(byte[] content)
+        using MemoryStream memoryStream = new MemoryStream();
+        await content.CopyToAsync(memoryStream, ct);
+        return memoryStream.ToArray();
+    }
+    
+    internal static (Encoding encoding, int bomLength) DefineEncoding(byte[] content)
     {
         if (content.Length >= 2 && content[0] == 0xFF && content[1] == 0xFE)
         {
@@ -34,7 +50,7 @@ internal static class TextDocumentDecoder
         }
     }
 
-    public static void ValidateFile(byte[] content, Encoding encoding)
+    internal static void ValidateFile(byte[] content, Encoding encoding)
     {
         if (encoding.CodePage == Encoding.Unicode.CodePage || encoding.CodePage == Encoding.BigEndianUnicode.CodePage)
         {
@@ -47,8 +63,9 @@ internal static class TextDocumentDecoder
         }
     }
 
-    public static string DecodeAndNormalize(byte[] content, Encoding encoding, int bomLength)
+    internal static string DecodeAndNormalize(byte[] content, Encoding encoding, int bomLength)
     {
-        return encoding.GetString(content, bomLength, content.Length - bomLength).ReplaceLineEndings("\n");
+        return encoding.GetString(content, bomLength, content.Length - bomLength)
+            .ReplaceLineEndings("\n");
     }
 }
