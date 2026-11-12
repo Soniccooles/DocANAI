@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { ACCEPT_FILE_TYPES } from '../../utils/constants'
 import { isFileValid } from '../../utils/files'
 
 const emit = defineEmits<{
@@ -63,7 +63,7 @@ const processFiles = (array: File[]) => {
       class="visually-hidden"
       ref="fileInputRef"
       type="file"
-      accept=".docx,.pdf,.txt,.md"
+      :accept="ACCEPT_FILE_TYPES"
       multiple
       @change="handleFilesChange"
     >

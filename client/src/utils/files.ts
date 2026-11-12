@@ -1,9 +1,4 @@
-export const VALID_FILE_TYPES = {
-  TXT: 'txt',
-  DOCX: 'docx',
-  PDF: 'pdf',
-  MD: 'md',
-}
+import { VALID_FILE_TYPES } from "./constants"
 
 export const getFileType = (file: File): string => 
   file.name.split('.').pop()?.toLowerCase() || ''

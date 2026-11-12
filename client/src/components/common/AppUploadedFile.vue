@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getFileType, VALID_FILE_TYPES } from '../../utils/files'
+import { VALID_FILE_TYPES } from '../../utils/constants'
+import { getFileType } from '../../utils/files'
 
 import txtIcon from '../../assets/images/txt.png'
 import mdIcon from '../../assets/images/md.svg'
