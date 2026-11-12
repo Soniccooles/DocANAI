@@ -93,4 +93,15 @@ public class TextDocumentDecoderTests
         Assert.DoesNotThrow(() => TextDocumentDecoder.ValidateFile(content, encoding));
         Assert.That(TextDocumentDecoder.DecodeAndNormalize(content, encoding, bomLength), Is.Not.EqualTo("слово"));
     }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task read_all_bytes_returns_stream_content(bool wrapInBufferedStream)
+    {
+        byte[] expected = [0x68, 0x65, 0x6C, 0x6C, 0x6F];
+        Stream stream = new MemoryStream(expected);
+        if (wrapInBufferedStream) stream = new BufferedStream(stream);
+        var result = await TextDocumentDecoder.ReadAllBytesAsync(stream, CancellationToken.None);
+        Assert.That(result, Is.EqualTo(expected));
+    }
 }
