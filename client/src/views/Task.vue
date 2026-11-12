@@ -10,11 +10,17 @@ import AppQuestionsUploader from '../components/common/AppQuestionsUploader.vue'
 import AppUploadedFile from '../components/common/AppUploadedFile.vue'
 import AppLoading from '../components/common/AppLoading.vue'
 
+import arrowClockwise from '../assets/icons/arrow-clockwise.svg'
+
+const ICONS = {
+  arrowClockwise,
+}
+
 import { STEPS, useTaskStore } from '../stores/task.store.ts'
 
 const taskStore = useTaskStore()
 
-const { currentStep, sourceFiles, questionsText, questionsFile, reportObjectName, loading } = storeToRefs(taskStore)
+const { currentStep, sourceFiles, questionsText, questionsFile, reportObjectName, loading, error } = storeToRefs(taskStore)
 
 const setSourceFiles = (files: File[]) => {
   sourceFiles.value?.push(...files)
@@ -163,7 +169,27 @@ onUnmounted(() => {
       </AppButton>
     </div>
     <div v-else-if="currentStep === 3" class="step">
-      <div v-if="!reportObjectName" class="step__result">
+
+      <div v-if="error && !reportObjectName" class="step__result">
+        <div class="step__result-description">
+          <p>Не удалось получить ответы</p>
+        </div>
+        <div class="step__result-hint">
+          <p>{{ error }}</p>
+        </div>
+        <AppButton
+            class="step__button"
+            :text="'Попробовать снова'"
+            :type="'button'"
+            @click="newTask">
+          
+          <template #icon>
+            <img :src="ICONS.arrowClockwise" alt="" />
+          </template>
+        </AppButton>
+      </div>
+
+      <div v-else-if="!reportObjectName" class="step__result">
         <div class="step__result-description">
           <p>ИИ ищет ответы на ваши вопросы</p>
         </div>
@@ -172,6 +198,7 @@ onUnmounted(() => {
         </div>
         <AppLoading v-if="loading" class="step__loading" />
       </div>
+      
       <div v-else class="step__result">
         <div class="step__result-description">
           <p>Готово!</p>

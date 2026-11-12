@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import api from '../services/api'
-
+import { TaskError, TaskFailedError, TaskTimeoutError } from '../utils/errors'
 import type { CreateTaskRequest, CreateTaskResponse, AddManualQuestionsRequest, StartTaskResponse, GetTaskStatusResponse, GetAiModelResponse } from '../types/api'
 
 export const STEPS = [
@@ -114,7 +114,9 @@ export const useTaskStore = defineStore('task', () => {
 
       await pollTaskStatus(10, 60)
     } catch (err: any) {
-      error.value = err.response?.data?.error || 'Ошибка при отправке задачи'
+      error.value = err instanceof TaskError
+          ? err.userMessage
+          : err.response?.data?.error || 'Ошибка при отправке задачи'
       throw err
     } finally {
       loading.value = false
@@ -132,15 +134,20 @@ export const useTaskStore = defineStore('task', () => {
 
         try {
           const { data } = await api.get<GetTaskStatusResponse>(`/tasks/${taskId.value}/status`)
-
+          
+          if (data.status === 'Failed') {
+            clearInterval(pollInterval!)
+            reject(new TaskFailedError("An error occurred while handling files"))
+            return
+          }
+          
           if (data.isReady && data.objectName) {
             reportObjectName.value = data.objectName
-
             clearInterval(pollInterval!)
             resolve(data.objectName)
           } else if (attempts >= maxAttempts) {
             clearInterval(pollInterval!)
-            reject(new Error('Timeout waiting for task status'))
+            reject(new TaskTimeoutError('Timeout waiting for task status'))
           }
         } catch (err) {
           if (attempts >= maxAttempts) {
