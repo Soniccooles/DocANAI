@@ -9,6 +9,7 @@ import AppButton from '../components/common/AppButton.vue'
 import AppQuestionsUploader from '../components/common/AppQuestionsUploader.vue'
 import AppUploadedFile from '../components/common/AppUploadedFile.vue'
 import AppLoading from '../components/common/AppLoading.vue'
+import AppErrorMessage from '../components/common/AppErrorMessage.vue'
 
 import arrowClockwise from '../assets/icons/arrow-clockwise.svg'
 
@@ -62,7 +63,7 @@ const prevStep = () => {
 }
 
 const downloadReport = () => {
-  taskStore.downloadReport()
+  taskStore.downloadReport().catch(err => console.error(err))
 }
 
 const newTask = () => {
@@ -167,16 +168,20 @@ onUnmounted(() => {
           </svg>
         </template>
       </AppButton>
+      <AppErrorMessage
+          v-if="error"
+          class="step__error"
+          title="Не удалось отправить запрос"
+          :text="error"
+      />
     </div>
     <div v-else-if="currentStep === 3" class="step">
 
       <div v-if="error && !reportObjectName" class="step__result">
-        <div class="step__result-description">
-          <p>Не удалось получить ответы</p>
-        </div>
-        <div class="step__result-hint">
-          <p>{{ error }}</p>
-        </div>
+        <AppErrorMessage
+            title="Не удалось получить ответы"
+            :text="error"
+        />
         <AppButton
             class="step__button"
             :text="'Попробовать снова'"
@@ -188,7 +193,7 @@ onUnmounted(() => {
           </template>
         </AppButton>
       </div>
-
+      
       <div v-else-if="!reportObjectName" class="step__result">
         <div class="step__result-description">
           <p>ИИ ищет ответы на ваши вопросы</p>
@@ -222,6 +227,11 @@ onUnmounted(() => {
             </svg>
           </template>
         </AppButton>
+        <AppErrorMessage
+            v-if="error"
+            class="step__error"
+            :text="error"
+        />
       </div>
     </div>
   </section>
@@ -312,6 +322,11 @@ onUnmounted(() => {
     }
   }
 
+  &__error {
+    margin-top: rem(24);
+    margin-inline: auto;
+  }
+  
   &__button,
   &__loading {
     margin-inline: auto;
@@ -321,4 +336,5 @@ onUnmounted(() => {
     }
   }
 }
+
 </style>

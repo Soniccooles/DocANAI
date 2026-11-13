@@ -35,3 +35,5 @@ export interface GetTaskStatusResponse {
 }
 
 export type TaskStatus = 'InQueue' | 'Processing' | 'Done' | 'Failed'
+
+export type TaskStage = 'create' | 'upload' | 'questions' | 'start' | 'poll'

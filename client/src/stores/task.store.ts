@@ -2,8 +2,9 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import api from '../services/api'
-import { TaskError, TaskFailedError, TaskTimeoutError } from '../utils/errors'
-import type { CreateTaskRequest, CreateTaskResponse, AddManualQuestionsRequest, StartTaskResponse, GetTaskStatusResponse, GetAiModelResponse } from '../types/api'
+import { TaskError, TaskFailedError, TaskStageError, TaskTimeoutError } from '../utils/errors'
+
+import type { CreateTaskRequest, CreateTaskResponse, AddManualQuestionsRequest, StartTaskResponse, GetTaskStatusResponse, TaskStage } from '../types/api'
 
 export const STEPS = [
   { title: 'Добавьте источники' },
@@ -70,7 +71,8 @@ export const useTaskStore = defineStore('task', () => {
 
     loading.value = true
     error.value = null
-
+    let stage: TaskStage = 'create'
+    
     try {
       const { data: taskData } = await api.post<CreateTaskResponse>('/tasks', {
         modelId: selectedModelId.value,
@@ -78,6 +80,8 @@ export const useTaskStore = defineStore('task', () => {
       } as CreateTaskRequest)
 
       taskId.value = taskData.taskId
+      
+      stage = 'upload'
       
       const sourceUploads = sourceFiles.value.map(file => {
         const formData = new FormData()
@@ -92,6 +96,8 @@ export const useTaskStore = defineStore('task', () => {
 
       await Promise.all(sourceUploads)
 
+      stage = 'questions'
+      
       if (questionsText.value.trim()) {
         const lines = questionsText.value.split(/\r?\n/).filter(l => l.trim())
         const questions = lines.map((text, idx) => ({ questionNumber: idx + 1, text }))
@@ -107,17 +113,22 @@ export const useTaskStore = defineStore('task', () => {
           }
         })
       }
-
+      
+      stage = 'start'
+      
       await api.post<StartTaskResponse>(`/tasks/${taskId.value}/start`)
-
       currentStep.value = 3
-
+      
+      stage = 'poll'
+      
       await pollTaskStatus(10, 60)
     } catch (err: any) {
-      error.value = err instanceof TaskError
-          ? err.userMessage
-          : err.response?.data?.error || 'Ошибка при отправке задачи'
-      throw err
+      const taskError = err instanceof TaskError 
+          ? err 
+          : new TaskStageError(stage, err)
+      
+      error.value = taskError.userMessage
+      throw taskError
     } finally {
       loading.value = false
     }
@@ -149,10 +160,19 @@ export const useTaskStore = defineStore('task', () => {
             clearInterval(pollInterval!)
             reject(new TaskTimeoutError('Timeout waiting for task status'))
           }
-        } catch (err) {
+        } catch (err: any) {
+          switch (err.response?.status) {
+            case 401:
+            case 403:
+            case 404:
+              clearInterval(pollInterval!)
+              reject(new TaskStageError('poll', err))
+              return
+          }
+
           if (attempts >= maxAttempts) {
             clearInterval(pollInterval!)
-            reject(err)
+            reject(new TaskStageError('poll', err))
           }
         }
       }, intervalSeconds * 1000)
@@ -160,6 +180,8 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const downloadReport = async () => {
+    error.value = null
+    
     if (!reportObjectName.value) throw new Error('Report not ready')
 
     try {
