@@ -9,12 +9,19 @@ import AppButton from '../components/common/AppButton.vue'
 import AppQuestionsUploader from '../components/common/AppQuestionsUploader.vue'
 import AppUploadedFile from '../components/common/AppUploadedFile.vue'
 import AppLoading from '../components/common/AppLoading.vue'
+import AppErrorMessage from '../components/common/AppErrorMessage.vue'
+
+import arrowClockwise from '../assets/icons/arrow-clockwise.svg'
+
+const ICONS = {
+  arrowClockwise,
+}
 
 import { STEPS, useTaskStore } from '../stores/task.store.ts'
 
 const taskStore = useTaskStore()
 
-const { currentStep, sourceFiles, questionsText, questionsFile, reportObjectName, loading } = storeToRefs(taskStore)
+const { currentStep, sourceFiles, questionsText, questionsFile, reportObjectName, loading, error } = storeToRefs(taskStore)
 
 const setSourceFiles = (files: File[]) => {
   sourceFiles.value?.push(...files)
@@ -56,7 +63,7 @@ const prevStep = () => {
 }
 
 const downloadReport = () => {
-  taskStore.downloadReport()
+  taskStore.downloadReport().catch(err => console.error(err))
 }
 
 const newTask = () => {
@@ -161,9 +168,33 @@ onUnmounted(() => {
           </svg>
         </template>
       </AppButton>
+      <AppErrorMessage
+          v-if="error"
+          class="step__error"
+          title="Не удалось отправить запрос"
+          :text="error"
+      />
     </div>
     <div v-else-if="currentStep === 3" class="step">
-      <div v-if="!reportObjectName" class="step__result">
+
+      <div v-if="error && !reportObjectName" class="step__result">
+        <AppErrorMessage
+            title="Не удалось получить ответы"
+            :text="error"
+        />
+        <AppButton
+            class="step__button"
+            :text="'Попробовать снова'"
+            :type="'button'"
+            @click="newTask">
+          
+          <template #icon>
+            <img :src="ICONS.arrowClockwise" alt="" />
+          </template>
+        </AppButton>
+      </div>
+      
+      <div v-else-if="!reportObjectName" class="step__result">
         <div class="step__result-description">
           <p>ИИ ищет ответы на ваши вопросы</p>
         </div>
@@ -172,6 +203,7 @@ onUnmounted(() => {
         </div>
         <AppLoading v-if="loading" class="step__loading" />
       </div>
+      
       <div v-else class="step__result">
         <div class="step__result-description">
           <p>Готово!</p>
@@ -195,6 +227,11 @@ onUnmounted(() => {
             </svg>
           </template>
         </AppButton>
+        <AppErrorMessage
+            v-if="error"
+            class="step__error"
+            :text="error"
+        />
       </div>
     </div>
   </section>
@@ -285,6 +322,11 @@ onUnmounted(() => {
     }
   }
 
+  &__error {
+    margin-top: rem(24);
+    margin-inline: auto;
+  }
+  
   &__button,
   &__loading {
     margin-inline: auto;
@@ -294,4 +336,5 @@ onUnmounted(() => {
     }
   }
 }
+
 </style>
