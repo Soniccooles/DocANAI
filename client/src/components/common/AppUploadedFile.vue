@@ -3,10 +3,10 @@ import { computed } from 'vue'
 import { VALID_FILE_TYPES } from '../../utils/constants'
 import { getFileType } from '../../utils/files'
 
-import txtIcon from '../../assets/icons/txt.png'
+import txtIcon from '../../assets/icons/txt.svg'
 import mdIcon from '../../assets/icons/md.svg'
-import docxIcon from '../../assets/icons/docx.png'
-import pdfIcon from '../../assets/icons/pdf.png'
+import docxIcon from '../../assets/icons/docx.svg'
+import pdfIcon from '../../assets/icons/pdf.svg'
 import defaultIcon from '../../assets/icons/default.svg'
 
 const props = defineProps<{

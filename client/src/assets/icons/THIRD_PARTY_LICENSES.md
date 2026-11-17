@@ -2,7 +2,7 @@
 
 ## Phosphor Icons
 Источник: https://phosphoricons.com
-Используются: md.svg, default.svg, arrow-clockwise.svg
+Используются: md.svg, default.svg, arrow-clockwise.svg, docx.svg, txt.svg, pdf.svg
 
 MIT License
 
