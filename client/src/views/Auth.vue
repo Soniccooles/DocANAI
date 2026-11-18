@@ -39,8 +39,7 @@ const handleSubmit = async () => {
     try {
       await authStore.register({
         username: username.value,
-        password: password.value,
-        userType: 'Basic'
+        password: password.value
       })
 
       const redirectPath = route.query.redirect as string
