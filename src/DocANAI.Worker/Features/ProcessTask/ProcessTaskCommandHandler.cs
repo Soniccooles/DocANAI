@@ -1,9 +1,11 @@
-﻿using DocANAI.Persistence.Entities.ProcessingTasks;
+﻿using System.Text;
+using DocANAI.Persistence.Entities.ProcessingTasks;
 using DocANAI.Persistence.Repositories.ProcessingTasks;
 using DocANAI.Persistence.ValueObjects;
 using DocANAI.Worker.Features.BuildReport;
 using DocANAI.Worker.Features.ParseDocuments;
 using DocANAI.Worker.Features.RunAnalysis;
+using DocANAI.Worker.Features.SplitDocuments;
 using MediatR;
 using TaskStatusEnum = DocANAI.Persistence.Entities.ProcessingTasks.TaskStatus;
 
@@ -29,8 +31,13 @@ internal sealed class ProcessTaskCommandHandler(
             if (task.Status != TaskStatusEnum.Processing) return;
 
             logger.LogInformation("Task {TaskId}: Starting document parsing...", (Guid)taskId);
-            var documentText = await mediator.Send(new ExtractTextFromDocumentsQuery(taskId), ct);
+            var documents = await mediator.Send(new ExtractTextFromDocumentsQuery(taskId), ct);
 
+            logger.LogInformation("Task {TaskId}: Splitting documents into chunks...", (Guid)taskId);
+            await mediator.Send(new SplitDocumentsIntoChunksCommand(taskId, documents), ct);
+            
+            var documentText = BuildAnalysisText(documents);
+            
             logger.LogInformation("Task {TaskId}: Starting LLM analysis...", (Guid)taskId);
             await mediator.Send(new RunAnalysisCommand(taskId, documentText), ct);
 
@@ -59,5 +66,19 @@ internal sealed class ProcessTaskCommandHandler(
 
         task.Fail();
         await repository.UpdateAsync(task, ct);
+    }
+    
+    private static string BuildAnalysisText(IReadOnlyList<ExtractedDocument> documents)
+    {
+        var builder = new StringBuilder();
+
+        foreach (var document in documents)
+        {
+            builder.AppendLine($"--- Document: {document.Filename} ---");
+            builder.AppendLine(document.Text);
+            builder.AppendLine();
+        }
+
+        return builder.ToString().Trim();
     }
 }
