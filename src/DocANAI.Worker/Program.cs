@@ -27,6 +27,7 @@ builder.ConfigureServices((context, services) =>
     services.AddSingleton<IObjectStorageService, MinioObjectStorageService>();
     services.AddSingleton<IDocumentTextExtractor, DocumentTextExtractor>();
     services.AddSingleton<IExcelReportBuilder, ExcelReportBuilder>();
+    services.AddSingleton<IDocumentChunker, DocumentChunker>();
     services.AddScoped<IAnswerGenerator, AnswerGenerator>();
     
     services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
