@@ -1,5 +1,4 @@
-﻿using System.Text;
-using DocANAI.Persistence.Repositories.SourceDocuments;
+﻿using DocANAI.Persistence.Repositories.SourceDocuments;
 using DocANAI.Worker.Infrastructure.Parsing;
 using DocANAI.Worker.Infrastructure.Storage;
 using MediatR;
