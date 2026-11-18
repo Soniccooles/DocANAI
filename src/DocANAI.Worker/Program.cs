@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DocANAI.Persistence;
+using DocANAI.Worker.Infrastructure.Chunking;
 using DocANAI.Worker.Infrastructure.Llm;
 using DocANAI.Worker.Infrastructure.Llm.Ollama;
 using DocANAI.Worker.Infrastructure.Messaging;
@@ -16,6 +17,7 @@ builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.ConfigureServices((context, services) =>
 {
     services.Configure<OllamaSettings>(context.Configuration.GetSection(OllamaSettings.SectionName));
+    services.Configure<ChunkSettings>(context.Configuration.GetSection(ChunkSettings.SectionName));
     services.AddHttpClient<IOllamaClient, OllamaClient>((sp, client) =>
     {
         var settings = sp.GetRequiredService<IOptions<OllamaSettings>>().Value;
