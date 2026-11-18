@@ -33,17 +33,21 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+
+      <None Update="Infrastructure\Chunking\sentencepiece.bpe.model">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DocANAI.Contracts\DocANAI.Contracts.csproj" />
       <ProjectReference Include="..\DocANAI.Persistence\DocANAI.Persistence.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <InternalsVisibleTo Include="DocANAI.Worker.Tests"/>
     </ItemGroup>
-    
     <ItemGroup>
       <Folder Include="Features\" />
     </ItemGroup>
