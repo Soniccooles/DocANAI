@@ -48,7 +48,4 @@
     <ItemGroup>
         <InternalsVisibleTo Include="DocANAI.Worker.Tests"/>
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Features\" />
-    </ItemGroup>
 </Project>
