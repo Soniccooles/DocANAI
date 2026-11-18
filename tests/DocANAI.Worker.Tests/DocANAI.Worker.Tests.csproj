@@ -16,7 +16,11 @@
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0"/>
     </ItemGroup>
 
-
+    <ItemGroup>
+        <None Update="TestData\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
     
     <ItemGroup>
         <Using Include="NUnit.Framework"/>
