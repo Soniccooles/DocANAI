@@ -44,6 +44,19 @@ const router = createRouter({
 
 let authCheckPromise: Promise<boolean> | null = null
 
+export const getSafeRedirect = (value: unknown, fallback: string): string => {
+  if (typeof value !== 'string') return fallback
+
+  try {
+    const url = new URL(value, window.location.origin)
+    return url.origin === window.location.origin
+        ? url.pathname + url.search + url.hash
+        : fallback
+  } catch {
+    return fallback
+  }
+}
+
 router.beforeEach(async (to, from) => {
   const authStore = useAuthStore()
 
@@ -66,10 +79,7 @@ router.beforeEach(async (to, from) => {
   }
 
   if (to.meta.requiresGuest && isAuthenticated) {
-    const redirectPath = from.query.redirect as string
-    const safePath = redirectPath && redirectPath.startsWith('/') ? redirectPath : '/profile'
-    
-    return safePath
+    return getSafeRedirect(from.query.redirect, '/profile')
   }
 
   return true

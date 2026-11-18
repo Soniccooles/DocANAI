@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-
+import { getSafeRedirect } from '../router'
 import AppButton from '../components/common/AppButton.vue'
 import AppInput from '../components/common/AppInput.vue'
 
@@ -29,9 +29,7 @@ const handleSubmit = async () => {
         password: password.value
       })
 
-      const redirectPath = route.query.redirect as string
-
-      router.push(redirectPath || `/${ROUTES.TASK}`)
+      router.push(getSafeRedirect(route.query.redirect, `/${ROUTES.TASK}`))
     } catch (err) {
       console.error('Login failed:', err)
     }
@@ -42,9 +40,7 @@ const handleSubmit = async () => {
         password: password.value
       })
 
-      const redirectPath = route.query.redirect as string
-
-      router.push(redirectPath || `/${ROUTES.TASK}`)
+      router.push(getSafeRedirect(route.query.redirect, `/${ROUTES.TASK}`))
     } catch (err) {
       console.error('Register failed:', err)
     }
