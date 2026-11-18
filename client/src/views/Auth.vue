@@ -7,7 +7,7 @@ import AppInput from '../components/common/AppInput.vue'
 
 import { useAuthStore } from '../stores/auth.store'
 
-import { ROUTES } from '../utils/constants.ts'
+import { ROUTES } from '../utils/constants'
 
 const router = useRouter()
 const route = useRoute()

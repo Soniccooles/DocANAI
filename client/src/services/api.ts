@@ -3,6 +3,7 @@ import type { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axio
 
 import { useAuthStore } from '../stores/auth.store'
 import { useErrorStore } from '../stores/error.store'
+import { ROUTES } from '../utils/constants'
 
 const api: AxiosInstance = axios.create({
   baseURL: '/api/v1',
@@ -79,7 +80,7 @@ api.interceptors.response.use(
           false
         );
         authStore.logout();
-        window.location.href = '/login';
+        window.location.href = `/${ROUTES.AUTH}`;
         return Promise.reject(refreshError);
       }
     }

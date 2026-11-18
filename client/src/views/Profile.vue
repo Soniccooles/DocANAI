@@ -3,6 +3,8 @@ import { useRouter } from 'vue-router'
 
 import { useAuthStore } from '../stores/auth.store'
 
+import { ROUTES } from "../utils/constants"
+
 const router = useRouter()
 
 const authStore = useAuthStore()
@@ -10,7 +12,7 @@ const authStore = useAuthStore()
 const handleLogout = () => {
   authStore.logout()
 
-  router.push('/login')
+  router.push(`/${ROUTES.AUTH}`)
 }
 </script>
 
