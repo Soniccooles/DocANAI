@@ -115,6 +115,8 @@
     ports:
       - "8080:8080"
     depends_on:
+      minio:
+        condition: service_healthy
       migrator:
         condition: service_completed_successfully
       rabbitmq:

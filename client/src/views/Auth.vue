@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-
+import { getSafeRedirect } from '../router'
 import AppButton from '../components/common/AppButton.vue'
 import AppInput from '../components/common/AppInput.vue'
 
 import { useAuthStore } from '../stores/auth.store'
 
-import { ROUTES } from '../utils/constants.ts'
+import { ROUTES } from '../utils/constants'
 
 const router = useRouter()
 const route = useRoute()
@@ -29,9 +29,7 @@ const handleSubmit = async () => {
         password: password.value
       })
 
-      const redirectPath = route.query.redirect as string
-
-      router.push(redirectPath || `/${ROUTES.TASK}`)
+      router.push(getSafeRedirect(route.query.redirect, `/${ROUTES.TASK}`))
     } catch (err) {
       console.error('Login failed:', err)
     }
@@ -39,13 +37,10 @@ const handleSubmit = async () => {
     try {
       await authStore.register({
         username: username.value,
-        password: password.value,
-        userType: 'Basic'
+        password: password.value
       })
 
-      const redirectPath = route.query.redirect as string
-
-      router.push(redirectPath || `/${ROUTES.TASK}`)
+      router.push(getSafeRedirect(route.query.redirect, `/${ROUTES.TASK}`))
     } catch (err) {
       console.error('Register failed:', err)
     }

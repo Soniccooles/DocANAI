@@ -5,7 +5,7 @@ import { getFileType } from '../../utils/files'
 
 import txtIcon from '../../assets/icons/txt.svg'
 import mdIcon from '../../assets/icons/md.svg'
-import docxIcon from '../../assets/icons/docx.svg'
+import docxIcon from '../../assets/icons/doc.svg'
 import pdfIcon from '../../assets/icons/pdf.svg'
 import defaultIcon from '../../assets/icons/default.svg'
 
