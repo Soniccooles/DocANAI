@@ -96,7 +96,8 @@ public sealed partial class DocumentChunker : IDocumentChunker
             if (index == 0) throw new InvalidOperationException("Token limit is too small to split the text");
 
             accumulator.Add(Denormalize(rest[..index]), tokens, " ");
-            rest = rest[index..];
+            var remainder = rest[index..];
+            rest = remainder.Length == 0 ? string.Empty : SpaceSymbol + remainder;
             normalize = false;
         }
     }
