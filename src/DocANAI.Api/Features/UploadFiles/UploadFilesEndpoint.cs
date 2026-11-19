@@ -32,7 +32,7 @@ public sealed class UploadFilesEndpoint(IMediator mediator) : ControllerBase
     /// <response code="400">Invalid request parameters or upload failure</response>
     /// <response code="401">User not authenticated</response>
     [HttpPost("upload")]
-    [RequestSizeLimit(100 * 1024 * 1024)] // 100 MB
+    [RequestSizeLimit(UploadFilesCommandHandler.MaxFileSizeBytes + 1024 * 1024)] // 100 MB + multipart часть запроса
     [ProducesResponseType(typeof(UploadFileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
