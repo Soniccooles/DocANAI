@@ -15,8 +15,14 @@ internal sealed class UploadFilesCommandHandler(
     IQuestionFilesRepository questionFilesRepository)
     : IRequestHandler<UploadFilesCommand, Result<UploadFileResponse, string>>
 {
+    public const long MaxFileSizeBytes = 100L * 1024 * 1024;
     public async Task<Result<UploadFileResponse, string>> Handle(UploadFilesCommand command, CancellationToken ct)
     {
+        if (command.File.Length > MaxFileSizeBytes)
+        {
+            return Result.Failure<UploadFileResponse, string>("File size exceeds the 100 MB limit");
+        }
+        
         try
         {
             var objectName = await minioService.UploadFileAsync(command.File);

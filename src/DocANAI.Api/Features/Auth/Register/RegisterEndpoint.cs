@@ -17,7 +17,7 @@ public sealed class RegisterEndpoint(IMediator mediator) : ControllerBase
     /// <summary>
     /// Registers a new user in the system
     /// </summary>
-    /// <param name="request">Registration data (username, password, optional user type)</param>
+    /// <param name="request">Registration data (username, password)</param>
     /// <param name="ct">Cancellation token</param>
     /// <returns>Access and refresh tokens along with user info</returns>
     /// <response code="200">User registered successfully</response>

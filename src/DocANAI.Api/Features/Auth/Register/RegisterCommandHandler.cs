@@ -31,14 +31,8 @@ internal sealed class RegisterCommandHandler(
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         var userId = IdOf<User>.New();
 
-        var userType = request.UserType.HasValue 
-            ? (UserType)request.UserType.Value 
-            : UserType.Basic;
-
-        var user = User.Create(userId, request.Username, passwordHash, userType);
+        var user = User.Create(userId, request.Username, passwordHash);
         await usersRepository.AddAsync(user, ct);
-
-        
         
         var accessToken = jwtProvider.GenerateAccessToken(user);
         var refreshToken = jwtProvider.GenerateRefreshToken();

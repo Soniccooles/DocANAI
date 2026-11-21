@@ -23,7 +23,6 @@ interface LoginCredentials {
 interface RegisterCredentials {
   username: string
   password: string
-  userType: string
 }
 
 interface AuthResponse {
