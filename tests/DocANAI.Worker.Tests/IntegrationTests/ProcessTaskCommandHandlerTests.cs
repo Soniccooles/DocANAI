@@ -27,7 +27,7 @@ public class ProcessTaskCommandHandlerTests : PostgresTestBase
     {
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddSingleton<IOptions<ChunkSettings>>(Options.Create(new ChunkSettings()));
+        services.AddSingleton(Options.Create(new ChunkSettings()));
         services.AddSingleton(storage);
         services.AddSingleton(answerGenerator);
         services.AddSingleton<IDocumentTextExtractor, DocumentTextExtractor>();

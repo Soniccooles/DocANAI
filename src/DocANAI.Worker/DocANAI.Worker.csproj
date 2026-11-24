@@ -33,11 +33,6 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-
-      <None Update="Infrastructure\Chunking\sentencepiece.bpe.model">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -47,5 +42,12 @@
     
     <ItemGroup>
         <InternalsVisibleTo Include="DocANAI.Worker.Tests"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Assets\tokenizers\**\*.model">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
 </Project>

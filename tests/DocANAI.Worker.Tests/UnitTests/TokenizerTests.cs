@@ -1,10 +1,11 @@
+using DocANAI.Worker.Infrastructure.Chunking;
 using Microsoft.ML.Tokenizers;
 
 namespace DocANAI.Worker.Tests.UnitTests;
 
 public class TokenizerTests
 {
-    private const string ModelPath = "Infrastructure/Chunking/sentencepiece.bpe.model";
+    private static readonly string ModelPath = new ChunkSettings().TokenizerModelPath;
 
     // Сравнение идет с AutoTokenizer.from_pretrained("intfloat/multilingual-e5-base")
     [TestCase("english.txt", 559)]
