@@ -5,4 +5,4 @@ using MediatR;
 namespace DocANAI.Worker.Features.ParseDocuments;
 
 public sealed record ExtractTextFromDocumentsQuery(IdOf<ProcessingTask> TaskId)
-    : IRequest<string>;
+    : IRequest<IReadOnlyList<ExtractedDocument>>;

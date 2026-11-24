@@ -21,6 +21,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.ML.Tokenizers" Version="3.0.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.8" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
@@ -38,12 +39,15 @@
       <ProjectReference Include="..\DocANAI.Contracts\DocANAI.Contracts.csproj" />
       <ProjectReference Include="..\DocANAI.Persistence\DocANAI.Persistence.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <InternalsVisibleTo Include="DocANAI.Worker.Tests"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Folder Include="Features\" />
+        <None Update="Assets\tokenizers\**\*.model">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
 </Project>
