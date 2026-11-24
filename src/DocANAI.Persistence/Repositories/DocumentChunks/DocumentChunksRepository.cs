@@ -17,4 +17,15 @@ public class DocumentChunksRepository(PostgreSqlDbContext dbContext)
             .Where(c => DbContext.SourceDocuments
                 .Any(d => d.Id == c.SourceDocumentId && d.TaskId == taskId))
             .ExecuteDeleteAsync(ct);
+
+    public async Task ReplaceByTaskIdAsync(IdOf<ProcessingTask> taskId, IReadOnlyCollection<DocumentChunk> chunks,
+        CancellationToken ct = default)
+    {
+        await using var transaction = await DbContext.Database.BeginTransactionAsync(ct);
+
+        await DeleteByTaskIdAsync(taskId, ct);
+        await AddRangeAsync(chunks, ct);
+        
+        await transaction.CommitAsync(ct);
+    }
 }

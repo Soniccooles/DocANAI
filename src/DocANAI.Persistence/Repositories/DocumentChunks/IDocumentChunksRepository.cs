@@ -6,6 +6,5 @@ namespace DocANAI.Persistence.Repositories.DocumentChunks;
 
 public interface IDocumentChunksRepository
 {
-    Task AddRangeAsync(IEnumerable<DocumentChunk> chunks, CancellationToken ct = default);
-    Task DeleteByTaskIdAsync(IdOf<ProcessingTask> taskId, CancellationToken ct = default);
+    Task ReplaceByTaskIdAsync(IdOf<ProcessingTask> taskId, IReadOnlyCollection<DocumentChunk> chunks, CancellationToken ct = default);
 }

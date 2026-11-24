@@ -13,8 +13,6 @@ internal sealed class SplitDocumentsIntoChunksCommandHandler(
 {
     public async Task Handle(SplitDocumentsIntoChunksCommand request, CancellationToken ct)
     {
-        await chunksRepository.DeleteByTaskIdAsync(request.TaskId, ct);
-
         var chunks = new List<DocumentChunk>();
 
         foreach (var document in request.Documents)
@@ -31,6 +29,6 @@ internal sealed class SplitDocumentsIntoChunksCommandHandler(
             }
         }
 
-        await chunksRepository.AddRangeAsync(chunks, ct);
+        await chunksRepository.ReplaceByTaskIdAsync(request.TaskId, chunks, ct);
     }
 }
