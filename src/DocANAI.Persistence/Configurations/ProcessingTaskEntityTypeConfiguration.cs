@@ -47,11 +47,13 @@ internal sealed class ProcessingTaskConfiguration : IEntityTypeConfiguration<Pro
         builder.HasOne<AIModel>()
             .WithMany()
             .HasForeignKey(t => t.ModelId)
-            .HasConstraintName("fk_tasks_model");
+            .HasConstraintName("fk_tasks_model")
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne<Priority>()
             .WithMany()
             .HasForeignKey(t => t.PriorityId)
-            .HasConstraintName("fk_tasks_priority");
+            .HasConstraintName("fk_tasks_priority")
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

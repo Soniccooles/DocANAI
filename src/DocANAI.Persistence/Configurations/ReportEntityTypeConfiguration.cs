@@ -34,7 +34,7 @@ internal sealed class ReportConfiguration : IEntityTypeConfiguration<Report>
         builder.HasOne<Format>()
             .WithMany()
             .HasForeignKey(x => x.Extension)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasOne<ProcessingTask>()
             .WithMany()
