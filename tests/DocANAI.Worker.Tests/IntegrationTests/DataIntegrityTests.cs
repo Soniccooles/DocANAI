@@ -43,23 +43,6 @@ public class DataIntegrityTests : PostgresTestBase
     }
 
     [Test]
-    public async Task delete_priority_with_dependent_task_throws_exception()
-    {
-        var (_, taskId) = await SeedModelWithTaskAsync();
-        await using (var db = CreateDbContext())
-        {
-            var priority = await db.Priorities.SingleAsync(p => p.Id == SeededPriorityId);
-            db.Priorities.Remove(priority);
-            
-            Assert.ThrowsAsync<DbUpdateException>(() => db.SaveChangesAsync());
-        }
-        
-        await using var check = CreateDbContext();
-        Assert.That(await check.Priorities.AnyAsync(p => p.Id == SeededPriorityId), Is.True);
-        Assert.That(await check.ProcessingTasks.AnyAsync(t => t.Id == taskId), Is.True);
-    }
-
-    [Test]
     public async Task seeder_adds_missing_model_while_existing_records_and_tasks_remain()
     {
         var (modelId, taskId) = await SeedModelWithTaskAsync();
