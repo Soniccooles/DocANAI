@@ -31,11 +31,6 @@ internal sealed class SourceDocumentEntityTypeConfiguration : IEntityTypeConfigu
             .HasMaxLength(50)
             .HasColumnName(nameof(SourceDocument.Extension).ToSnakeCase());
         
-        builder.HasOne<Format>()
-            .WithMany()
-            .HasForeignKey(x => x.Extension)
-            .OnDelete(DeleteBehavior.Cascade);
-        
         builder.Property(x => x.Size)
             .IsRequired()
             .HasColumnName(nameof(SourceDocument.Size).ToSnakeCase());
@@ -43,14 +38,19 @@ internal sealed class SourceDocumentEntityTypeConfiguration : IEntityTypeConfigu
         builder.Property(x => x.UserId)
             .IsRequired()
             .HasColumnName(nameof(SourceDocument.UserId).ToSnakeCase());
-
+        
+        builder.Property(x => x.TaskId)
+            .HasColumnName(nameof(SourceDocument.TaskId).ToSnakeCase());
+        
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.Property(x => x.TaskId)
-            .HasColumnName(nameof(SourceDocument.TaskId).ToSnakeCase());
+        builder.HasOne<Format>()
+            .WithMany()
+            .HasForeignKey(x => x.Extension)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne<ProcessingTask>()
             .WithMany()

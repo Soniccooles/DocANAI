@@ -33,21 +33,21 @@ internal sealed class ProcessingTaskConfiguration : IEntityTypeConfiguration<Pro
         builder.Property(x => x.UserId)
             .HasColumnName(nameof(ProcessingTask.UserId).ToSnakeCase());
 
+        builder.Property(x => x.ModelId)
+            .HasColumnName(nameof(ProcessingTask.ModelId).ToSnakeCase());
+        
+        builder.Property(x => x.PriorityId)
+            .HasColumnName(nameof(ProcessingTask.PriorityId).ToSnakeCase());
+        
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(t => t.UserId)
             .HasConstraintName("fk_tasks_user");
         
-        builder.Property(x => x.ModelId)
-            .HasColumnName(nameof(ProcessingTask.ModelId).ToSnakeCase());
-        
         builder.HasOne<AIModel>()
             .WithMany()
             .HasForeignKey(t => t.ModelId)
             .HasConstraintName("fk_tasks_model");
-        
-        builder.Property(x => x.PriorityId)
-            .HasColumnName(nameof(ProcessingTask.PriorityId).ToSnakeCase());
         
         builder.HasOne<Priority>()
             .WithMany()

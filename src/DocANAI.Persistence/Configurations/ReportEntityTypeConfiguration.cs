@@ -11,6 +11,7 @@ internal sealed class ReportConfiguration : IEntityTypeConfiguration<Report>
     public void Configure(EntityTypeBuilder<Report> builder)
     {
         builder.ToTable(nameof(Report).ToSnakeCase());
+        
         builder.HasId();
         builder.HasAudits();
 
@@ -23,17 +24,17 @@ internal sealed class ReportConfiguration : IEntityTypeConfiguration<Report>
             .HasMaxLength(1024)
             .HasColumnName(nameof(Report.FilePath).ToSnakeCase());
         
-        builder.HasOne<Format>()
-            .WithMany()
-            .HasForeignKey(x => x.Extension)
-            .OnDelete(DeleteBehavior.Cascade);
-        
         builder.Property(x => x.DeletionDate)
             .IsRequired(false)
             .HasColumnName(nameof(Report.DeletionDate).ToSnakeCase());
 
         builder.Property(x => x.TaskId)
             .HasColumnName(nameof(Report.TaskId).ToSnakeCase());
+        
+        builder.HasOne<Format>()
+            .WithMany()
+            .HasForeignKey(x => x.Extension)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne<ProcessingTask>()
             .WithMany()
