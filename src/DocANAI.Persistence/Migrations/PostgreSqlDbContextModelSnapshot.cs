@@ -606,14 +606,14 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.AIModel", null)
                         .WithMany()
                         .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_tasks_model");
 
                     b.HasOne("DocANAI.Persistence.Entities.Priorities.Priority", null)
                         .WithMany()
                         .HasForeignKey("PriorityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_tasks_priority");
 
@@ -644,7 +644,7 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.Format", null)
                         .WithMany()
                         .HasForeignKey("Extension")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
@@ -665,7 +665,7 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.Format", null)
                         .WithMany()
                         .HasForeignKey("Extension")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
@@ -680,7 +680,7 @@ namespace DocANAI.Persistence.Migrations
                     b.HasOne("DocANAI.Persistence.Entities.Format", null)
                         .WithMany()
                         .HasForeignKey("Extension")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DocANAI.Persistence.Entities.ProcessingTasks.ProcessingTask", null)
