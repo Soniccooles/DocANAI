@@ -56,24 +56,27 @@ public sealed class DatabaseSeeder : IDatabaseSeeder
         _logger.LogInformation("Priorities seeded successfully.");
         return true;
     }
+    
+    private static readonly (Guid Id, string Name, string Version)[] SeedModels =
+    [
+        (Guid.Parse("99c6eae3-f2f4-400d-a02a-7fc5c76844f3"), "llama3.1", "latest")
+    ];
 
     private async Task<bool> SeedAIModelsAsync(CancellationToken ct)
     {
-        var targetModelId = IdOf<AIModel>.From(Guid.Parse("99c6eae3-f2f4-400d-a02a-7fc5c76844f3"));
-        if (await _dbContext.AIModels.AnyAsync(m => m.Id == targetModelId, ct)) return false;
+        var changed = false;
 
-        var oldModels = await _dbContext.AIModels.ToListAsync(ct);
-        if (oldModels.Count > 0)
+        foreach (var (id, name, version) in SeedModels)
         {
-            _dbContext.AIModels.RemoveRange(oldModels);
-            _logger.LogInformation("-> Removing old AI models to make room for llama3.1.");
+            if (await _dbContext.AIModels.AnyAsync(m => m.Name == name && m.Version == version, ct))
+                continue;
+
+            await _dbContext.AIModels.AddAsync(AIModel.Create(IdOf<AIModel>.From(id), name, version), ct);
+            _logger.LogInformation("AI model {Name}:{Version} seeded.", name, version);
+            changed = true;
         }
-        
-        var defaultModel = AIModel.Create(targetModelId, "llama3.1", "latest");
-        
-        await _dbContext.AIModels.AddAsync(defaultModel, ct);
-        _logger.LogInformation("AI Models seeded successfully.");
-        return true;
+
+        return changed;
     }
     
     private async Task<bool> SeedUsersAsync(CancellationToken ct)

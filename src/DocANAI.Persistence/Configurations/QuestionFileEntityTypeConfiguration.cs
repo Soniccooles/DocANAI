@@ -41,7 +41,7 @@ public class QuestionFileEntityTypeConfiguration : IEntityTypeConfiguration<Ques
         builder.HasOne<Format>()
             .WithMany()
             .HasForeignKey(x => x.Extension)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<User>()
             .WithMany()
